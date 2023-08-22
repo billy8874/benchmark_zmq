@@ -5,8 +5,9 @@ import matplotlib.pyplot as plt
 def main():
     per_lat = (100 - 95) * 5
     xlocs = np.array([1, 2, 3, 4, 5, 6], dtype=np.int32)
+    xlable = np.array(['8B', '80B', '200B', '500B', '1000B', '2000B'], dtype=str)
     # Load Data 1
-    x1 = np.load('result/tmp/1v1_small_100hz.npy')
+    x1 = np.load('result/latency/1v1_small_100hz.npy')
     data1 = []
     for i in range(x1.shape[0]):
         data1.append(np.sort(x1[i,:])[:-per_lat])
@@ -14,7 +15,7 @@ def main():
     x1 = xlocs
 
     # Load Data 2
-    x2 = np.load('result/tmp/1v10_small_100hz.npy')
+    x2 = np.load('result/latency/1v10_small_100hz.npy')
     data2 = []
     for i in range(x2.shape[0]):
         data2.append(np.sort(x2[i,:])[:-per_lat])
@@ -28,7 +29,6 @@ def main():
     # Plot Data 1
     c1='green'
     plt.plot(x1, y1_mean, c1)
-    locs, labels = plt.xticks()
     box_pos1 = x1 - np.array([box_wid/2*1.2], dtype=np.float64)
     bp1 = ax.boxplot(data1, positions=box_pos1 ,showfliers=True, widths=box_wid, whis=per, patch_artist=True,
             boxprops=dict(facecolor=[0, 1, 0, 0.2], color=c1),
@@ -54,7 +54,7 @@ def main():
             medianprops=dict(color='black'))
     
 
-    plt.xticks(locs, locs)
+    plt.xticks(xlocs, xlable)
     ax.legend([bp1["boxes"][0], bp2["boxes"][0]], ['1v1', '1v10'], loc='upper left')
     plt.xlabel('Payload(B)')
     plt.ylabel('Latency(us )')

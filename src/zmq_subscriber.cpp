@@ -41,7 +41,7 @@ int main(int argc, char * argv[]) {
         memcpy(&sentTime, message.data(), sizeof(int64_t));
         double latencyMs = static_cast<double>(currentTime - sentTime);
         if(messageNumber>=5) latency[messageNumber-5] = latencyMs;
-        std::cout << "Received: Latency: " << latencyMs << " us" << std::endl;
+        // std::cout << "Received: Latency: " << latencyMs << " us" << std::endl;
 
         // std::string receivedString(static_cast<char*>(message.data()) + sizeof(int64_t), 8);
 
@@ -56,7 +56,7 @@ int main(int argc, char * argv[]) {
     // write to file
     std::cout << "finish! write to csv file" << std::endl;
     std::ofstream myfile;
-    myfile.open("result/tmp/" + std::string("latency_") + std::string("subscriber_") + std::string(argv[3]) + std::string(".csv"));
+    myfile.open("result/latency/tmp/" + std::string("latency_") + std::string("subscriber_") + std::string(argv[3]) + std::string(".csv"));
     for(int i=0; i<500; i++){
         myfile << latency[i] << ',';
     }

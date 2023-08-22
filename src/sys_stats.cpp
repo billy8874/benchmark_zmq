@@ -28,7 +28,7 @@ int main(int argc, char * argv[]){
 
     std::cout << "stats complete" << std::endl;
     // Write to file
-    myfile.open("result/cpu_mem/" + std::string("1v") + std::string(argv[3]) + "_" + std::string(argv[1]) + "_" + std::string(argv[2]) + "hz.csv");
+    myfile.open("result/cpu_mem/tmp/" + std::string("1v") + std::string(argv[3]) + "_" + std::string(argv[1]) + "_" + std::string(argv[2]) + "hz.csv");
     for(int i=0; i<time; i++){
         myfile << usage[0][i] << ',' << usage[1][i] << '\n';
     }
