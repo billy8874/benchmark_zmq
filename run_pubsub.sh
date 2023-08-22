@@ -20,9 +20,11 @@ do
                 done
                 timeout $wait_time ./sys_stats $data $hz $n_max $m_max &
                 wait
-                python3 data_process.py $hz $n_max small
+                python3 data_process.py $hz $n_max $m_max small
+                sleep 0.5
             done
-            python3 cpu_mem_process.py $hz $n_max small
+            python3 cpu_mem_process.py $hz $n_max $m_max small
+            sleep 0.5
         done
     done
 done

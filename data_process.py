@@ -6,7 +6,8 @@ import sys
 def main():
     fre = sys.argv[1]
     sub_num = sys.argv[2]
-    size = sys.argv[3]
+    pub_num = sys.argv[3]
+    size = sys.argv[4]
 
     np_data = np.zeros((int(sub_num),500),dtype=np.double)
 
@@ -22,7 +23,7 @@ def main():
     mean_latency = np.mean(data_max)
     # print(data_max)
     print("Mean Latency: ", mean_latency)
-    filename = 'result/latency/1v'+sub_num+'_'+size+'_'+fre+'hz'
+    filename = 'result/latency/1v'+sub_num+'_x'+pub_num+'_'+size+'_'+fre+'hz'
     try:
         x = np.load(filename+'.npy')
         x = np.vstack((x, data_max[None,:]))
@@ -30,7 +31,6 @@ def main():
     except:
         x = data_max[None,:]
         np.save(filename,x)
-    
     
 
 if __name__ == "__main__":
