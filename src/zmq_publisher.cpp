@@ -31,7 +31,7 @@ int main(int argc, char * argv[]) {
     int messageNumber = 0;
     while (messageNumber<505) {
         // Create an int8 array message
-        int8_t message[messageSize];
+        int8_t* message = new int8_t[messageSize];
         message[0] = messageNumber;
         std::string frame_id = "frame000";
 
@@ -48,7 +48,7 @@ int main(int argc, char * argv[]) {
 
         // Send the message
         publisher.send(zmqMessage);
-
+        delete[] message;
         messageNumber++;
         std::this_thread::sleep_for(std::chrono::milliseconds(1000/std::stoi(argv[2]))); // Delay for demonstration purposes
     }

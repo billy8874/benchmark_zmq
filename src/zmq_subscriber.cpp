@@ -47,10 +47,12 @@ int main(int argc, char * argv[]) {
 
         // std::cout << "string: " << receivedString << std::endl;
 
-        int8_t receivedArray[messageSize];
+        int8_t* receivedArray = new int8_t[messageSize];
         memcpy(receivedArray, static_cast<char*>(message.data()) + sizeof(int64_t) + 8, 8);
         // std::cout << "data: " << static_cast<int>(receivedArray[0]) << std::endl;
+        delete[] receivedArray;
         messageNumber++;
+        // std::cout << messageNumber << std::endl;
     }
 
     // write to file
