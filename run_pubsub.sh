@@ -44,13 +44,13 @@ else
                     ## open n*subscriber and m*publisher
                     for m in $(seq 0 $((m_max-1)))
                     do
-                        ./pubtime $data $hz $m & 
+                        timeout $wait_time ./pubtime $data $hz $m & 
                         for n in $(seq 0 $((n_max-1)))
                         do
-                            ./subtime $data $m $n & 
+                            timeout $wait_time ./subtime $data $m $n & 
                         done
                     done
-                    ./sys_stats $data $hz $n_max $m_max &
+                    timeout $wait_time ./sys_stats $data $hz $n_max $m_max &
                     wait
                     python3 data_process.py $hz $n_max $m_max $test
                     sleep 0.5
