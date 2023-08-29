@@ -1,63 +1,68 @@
 #!/bin/bash
 test="small"
 
-if [[ "$test" == "small" ]]; then
-    # small payload
-    for m_max in 5 10 #2 5 10
+# small payload
+for m_max in 1 2 5 10
+do
+    for hz in 100 50 30 10
     do
-        for hz in 100
+        ((wait_time=505/hz+5))
+        for n_max in 1 2 5 10 
         do
-            ((wait_time=505/hz+2))
-            for n_max in 5
+            for data in 8B 80B 200B 500B 1000B 2000B
             do
-                for data in 8B 80B 200B 500B 1000B 2000B
+                ## open n*subscriber and m*publisher
+                for m in $(seq 0 $((m_max-1)))
                 do
-                    ## open n*subscriber and m*publisher
-                    for m in $(seq 0 $((m_max-1)))
+                    timeout $wait_time ./pubtime $data $hz $m & 
+                    for n in $(seq 0 $((n_max-1)))
                     do
-                        ./pubtime $data $hz $m & 
-                        for n in $(seq 0 $((n_max-1)))
-                        do
-                            ./subtime $data $m $((n+m*n_max)) & 
-                        done
+                        timeout $wait_time ./subtime $data $m $((n+m*n_max)) & 
                     done
-                    ./sys_stats $data $hz $n_max $m_max &
-                    wait
-                    python3 data_process.py $hz $n_max $m_max $test
-                    sleep 0.5
                 done
-                python3 cpu_mem_process.py $hz $n_max $m_max $test
+                timeout $wait_time ./sys_stats $data $hz $n_max $m_max &
+                wait
+                python3 data_process.py $hz $n_max $m_max $test
                 sleep 0.5
+                rm -rf result/latency/tmp/
+                mkdir result/latency/tmp/
             done
+            python3 cpu_mem_process.py $hz $n_max $m_max $test
+            sleep 0.5
         done
     done
-else
-    for m_max in 1 #2 5 10
+done
+
+
+test="large"
+# large payload
+for m_max in 1 2 5 10
+do
+    for hz in 100 50 30 10
     do
-        for hz in 10
+        ((wait_time=505/hz+5))
+        for n_max in 1 2 5 10
         do
-            ((wait_time=505/hz+5))
-            for n_max in 1 5 10
+            for data in 1MB 5MB 10MB 20MB 30MB 50MB
             do
-                for data in 1MB 5MB 10MB 20MB 30MB 50MB
+                ## open n*subscriber and m*publisher
+                for m in $(seq 0 $((m_max-1)))
                 do
-                    ## open n*subscriber and m*publisher
-                    for m in $(seq 0 $((m_max-1)))
+                    timeout $wait_time ./pubtime $data $hz $m & 
+                    for n in $(seq 0 $((n_max-1)))
                     do
-                        ./pubtime $data $hz $m & 
-                        for n in $(seq 0 $((n_max-1)))
-                        do
-                            ./subtime $data $m $n & 
-                        done
+                        timeout $wait_time ./subtime $data $m $((n+m*n_max)) & 
                     done
-                    ./sys_stats $data $hz $n_max $m_max &
-                    wait
-                    python3 data_process.py $hz $n_max $m_max $test
-                    sleep 0.5
                 done
-                python3 cpu_mem_process.py $hz $n_max $m_max $test
+                timeout $wait_time ./sys_stats $data $hz $n_max $m_max &
+                wait
+                python3 data_process.py $hz $n_max $m_max $test
                 sleep 0.5
+                rm -rf result/latency/tmp/
+                mkdir result/latency/tmp/
             done
+            python3 cpu_mem_process.py $hz $n_max $m_max $test
+            sleep 0.5
         done
     done
-fi
+done
